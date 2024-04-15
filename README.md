@@ -1,1 +1,1 @@
-# wordy-absurdity
+# Wordy Absurdity
