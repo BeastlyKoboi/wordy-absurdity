@@ -33,14 +33,7 @@ redisClient.on('error', (err) => console.log('Redis Client Error', err));
 redisClient.connect().then(() => {
   const app = express();
 
-  app.use(helmet());
-  app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted/`)));
-  app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
-  app.use(compression());
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(bodyParser.json());
-
-  app.use(session({
+  const sessionMiddleware = session({
     key: 'sessionid',
     store: new RedisStore({
       client: redisClient,
@@ -48,14 +41,23 @@ redisClient.connect().then(() => {
     secret: 'Domo Arigato',
     resave: false,
     saveUninitialized: false,
-  }));
+  });
+
+  app.use(helmet());
+  app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted/`)));
+  app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
+  app.use(compression());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
+
+  app.use(sessionMiddleware);
 
   app.engine('handlebars', expressHandlebars.engine({ defaultLayout: '' }));
   app.set('view engine', 'handlebars');
   app.set('views', `${__dirname}/../views`);
 
   router(app);
-  const server = socketSetup(app);
+  const server = socketSetup(app, sessionMiddleware);
 
   server.listen(port, (err) => {
     if (err) {

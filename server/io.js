@@ -38,9 +38,10 @@ const handleRoomChange = (socket, roomName) => {
     socket.join(roomName);
 };
 
-const socketSetup = (app) => {
+const socketSetup = (app, sessionMiddleware) => {
     const server = http.createServer(app);
     io = new Server(server);
+    io.engine.use(sessionMiddleware);
 
     io.on('connection', (socket) => {
         console.log('a user connected');
@@ -50,7 +51,14 @@ const socketSetup = (app) => {
         });
 
         // socket.on('chat message', (msg) => handleChatMessage(socket, msg));
-        socket.on('join game', (gameKey) => handleRoomChange(socket, gameKey));
+        socket.on('join game', async (gameKey) => {
+            handleRoomChange(socket, gameKey);
+
+            console.log(socket.request.session.account.username, 'has joined a game');
+
+            io.to(gameKey).emit('player joined', { username: socket.request.session.account.username });
+            console.log(await io.in(gameKey).fetchSockets())
+        });
         socket.on('host game', () => {
             console.log('host game called.');
             let gameKey;

@@ -1,5 +1,3 @@
-// const { io } = require('socket.io')();
-
 const socket = io();
 
 // const handleEditBox = () => {
@@ -38,7 +36,7 @@ const handleJoinGame = () => {
     const keyInput = document.getElementById('game-key-input');
     const joinBtn = document.getElementById('join-btn');
 
-    joinBtn.addEventListener('click', () => {
+    joinBtn.addEventListener('click', (e) => {
         e.preventDefault();
 
         if (keyInput.value) {
@@ -61,10 +59,14 @@ const init = () => {
 
     handleHostGame();
     handleJoinGame();
-    
+
     socket.on('game key', handleGameCode);
 
-
+    socket.on('player joined', (playerInfo) => {
+        console.log(`${playerInfo.username} other player has joined!`);
+        displayMessage(`${playerInfo.username} has joined!`)
+    });
+    console.log(socket);
 };
 
 module.exports = {

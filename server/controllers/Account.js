@@ -2,6 +2,12 @@ const models = require('../models');
 
 const { Account } = models;
 
+const notFoundPage = (req,res) => res.render('notFound');
+
+const accountSettingsPage = (req, res) => res.render('accountSettings');
+
+const adminPage = (req,res) => res.render('admin');
+
 const loginPage = (req, res) => res.render('login');
 
 const changePasswordPage = (req, res) => res.render('changePassword');
@@ -92,6 +98,9 @@ const changePassword = async (req, res) => {
 };
 
 module.exports = {
+  notFoundPage,
+  accountSettingsPage,
+  adminPage,
   loginPage,
   changePasswordPage,
   login,
