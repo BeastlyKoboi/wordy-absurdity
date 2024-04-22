@@ -4,6 +4,8 @@ const _ = require('underscore');
 
 let io;
 
+let lonelyRooms = [];
+
 const generateRoomKey = (keyLength = 6) => {
     const set = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
         'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -71,6 +73,22 @@ const socketSetup = (app, sessionMiddleware) => {
 
             socket.emit('game key', gameKey);
             console.log('game key emitted');
+        });
+        socket.on('join matchmade game', () => {
+            let gameKey;
+
+            if (lonelyRooms.length === 0) {
+                do {
+                    gameKey = generateRoomKey();
+                    console.log('game key generated.');
+                } while (socket.rooms[gameKey]);
+                handleRoomChange(socket, gameKey);
+                lonelyRooms.push(gameKey);
+            }
+            else {
+                handleRoomChange(socket, lonelyRooms.pop());
+            }
+
         });
     });
 

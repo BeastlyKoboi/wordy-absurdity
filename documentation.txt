@@ -1,0 +1,41 @@
+● What is the intended purpose of your application?
+This web application is meant to be an entertaining way to play a word game with your friends. The core functionality is just spelling trying to get more point from what amounts to scrabble words, but I wanted to slant it more competitively by having each word do damage to the other player. 
+
+
+● What work has been completed for this milestone?
+Honestly I hit a couple roadblocks. On a personal note I was a bit overloaded on projects and was unable to manage my time properly, which made this current implementation suffer. I ran into some trouble with socket io and debugging them proved to be difficult. The faulty code was commented out for now in socket.js in client. I made some deicisions about my overall scope that were inadvisable. I have a working socket connection that functions with the server and the page layout all squared away. Tailwind is working properly, but the projects has stalled a bit. 
+
+
+● What work is left, and how do you plan to complete it?
+    ○ What does your timeline/roadmap look like to finish on time?
+The bulk of the work is yet to be completed. This week should be more for me to be able to fully flesh out this project (due to other submitted project off my workload) with making the simple back and forth for the game, the admin page to see overall players information, and account settings for stuff like change the password and "purchasing cosmetics". Though the higher goals for this project will likely need to be reigned in. To make this happen I need to fix the socket connection, attempt to streamline the game how socket calls are handled and put in a lot more work. I want this project to succeed, but it's clear more time and effort are needed. 
+
+● How are you using React?
+    ○ What components have you made?
+    ○ What components do you still plan to add?
+I have made basic components for the pages, the navbar, and an iteration on what the letter's would look like. I will need many more in order to fill the requirements. I intend to make an all in one game state at the head of the screen to handle all conveyance, which will likely be the worst offender time-wise. 
+
+
+● What data are you storing in MongoDB?
+    ○ What data do you still need to store?
+At present we are storing just the username and password as usual. I intend to store more information such as...
+- cosmetics - list of font names that user has access to
+- Amount of game wins
+- most points in a word
+- and in general a leaderboard for most wins
+
+● What is your profit model?
+    ○ Have you implemented it yet?
+        ■ If so, how?
+        ■ If not, what is your plan to implement it?
+My profit model is through purchased cosmetics for your letters. You can purchase premium letter and font designs to play with during a game. These will have no other effect than just looking pretty. The financial viability of this strategy in this sort of game is iffy, but I like it. I intend to implement it by using a portion of the account settings page I have to select and purchase these cosmetics. Every account in the database will have a whitelist of cosmetics they have access to use. Whenever one is "purchased" a post request will be sent to add a specific set to the whitelist of that person. Then they can use it.  
+
+
+● Do you have a plan for going above and beyond? If so, what is it?
+I'm using Socket.IO to run the game stuff and tailwind for styling. Other than that I will likely use a package to check if a word is valid english. An extreme stretch goal that probably won't happen is perhaps using a react DnD package to make the letter spelling drag and drop instead of selecting. 
+
+
+● If you used any borrowed code or code fragments, where did you get them from? What do the code fragments do? Where are they in your code?
+I do not believe I have much in the way of code fragments. 
+
+

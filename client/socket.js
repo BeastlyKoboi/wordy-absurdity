@@ -1,66 +1,29 @@
 const socket = io();
 
-// const handleEditBox = () => {
-//     const editForm = document.getElementById('editForm');
-//     const editBox = document.getElementById('editBox');
-//     const channelSelect = document.getElementById('channelSelect');
-
-//     editForm.addEventListener('submit', (e) => {
-//         e.preventDefault();
-
-//         if (editBox.value) {
-//             socket.emit('chat message', editBox.value);
-//             editBox.value = "";
-//         }
-//     });
-// };
-
-
 const displayMessage = (msg) => {
-    const messageDiv = document.createElement('div');
-    messageDiv.textContent = msg;
-    document.getElementById('message').appendChild(messageDiv);
+    const messageP = document.createElement('p');
+    messageP.textContent = msg;
+    document.getElementById('game-key').appendChild(messageP);
 };
 
-const handleHostGame = () => {
-    const hostBtn = document.getElementById('host-btn');
 
-    hostBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        console.log('host game emitted!');
-        socket.emit('host game');
-    });
-};
+const init = (playOption, ) => {
 
-const handleJoinGame = () => {
-    const keyInput = document.getElementById('game-key-input');
-    const joinBtn = document.getElementById('join-btn');
+    if (!playOption) {
+        return;
+    }
 
-    joinBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-
-        if (keyInput.value) {
-            console.log('join game emitted!');
-
-            socket.emit('join game', keyInput.value);
-            keyInput.value = "";
-        }
-    });
-};
-
-const handleGameCode = (gameKey) => {
-    const gameKeyOutput = document.getElementById('game-key-output');
-
-    gameKeyOutput.innerText = gameKey;
-};
-
-const init = () => {
-    console.log('Socket initialized emitted!');
-
-    handleHostGame();
-    handleJoinGame();
-
-    socket.on('game key', handleGameCode);
+    // if (playOption.option === 'host') {
+    //     console.log('host game emitted!');
+    //     socket.emit('host game');
+    //     socket.on('game key', displayMessage(gameKey));
+    // } else if (playOption.option === 'join game key') {
+    //     console.log('join game emitted!');
+    //     socket.emit('join game', playOption.key);
+    // } else if (playOption.option === 'matchmaking') {
+    //     console.log('join matchmade game emitted!');
+    //     socket.emit('join matchmade game');
+    // }
 
     socket.on('player joined', (playerInfo) => {
         console.log(`${playerInfo.username} other player has joined!`);

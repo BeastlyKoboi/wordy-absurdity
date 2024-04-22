@@ -1,20 +1,25 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <title>Wordy Absurdity</title>
-  <link rel="shortcut icon" href="/assets/img/favicon1.png" />
-  <link rel="stylesheet" type="text/css" href="/assets/output.css" />
+    <meta charset="utf-8" />
+    <title>Wordy Absurdity</title>
+    <link rel="shortcut icon" href="/assets/img/favicon1.png" />
+    <link rel="stylesheet" type="text/css" href="/assets/output.css" />
 </head>
 
 <body class="bg-cyan-300">
 
-  <section id="app">
+    <section id="app">
 
-  </section>
+    </section>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/assets/gameBundle.js"></script>
+    <div id="messageDiv" class='hidden'>
+        <h3 className='text-black'><span id="message"></span></h3>
+        <h3 className='text-red'><span id="errorMessage"></span></h3>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/assets/gameBundle.js"></script>
 </body>
 
 </html>

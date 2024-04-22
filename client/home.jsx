@@ -7,8 +7,13 @@ const { createRoot } = require('react-dom/client');
 import NavBar from './Components/NavBar.jsx';
 import Letter from './Components/Letter.jsx';
 
+const handlePlay = (option, key = null) => {
+    localStorage.setItem('playOption', JSON.stringify({ option, key }));
+    window.location.pathname = '/game';
+};
+
 const App = () => {
-    
+
     return (
         <div className='bg-cyan-300'>
             <NavBar hasLogout={true} hasAccountSettings={true} />
@@ -18,7 +23,7 @@ const App = () => {
                 <div class="m-6 p-6 max-w-sm mx-auto bg-white rounded-xl shadow-lg flex items-center">
                     <div className='flex flex-col mx-auto text-center'>
                         <div class="text-xl font-medium text-black">Host Game</div>
-                        <button id='host-btn' className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 me-2 mb-2'>
+                        <button id='host-btn' onClick={() => { handlePlay('host') }} className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 me-2 mb-2'>
                             Host
                         </button>
                     </div>
@@ -28,7 +33,7 @@ const App = () => {
                     <div className='flex flex-col mx-auto text-center'>
                         <div class="text-xl font-medium text-black">Join Game</div>
                         <input id='game-key-input' type="text" className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5' />
-                        <button id='join-btn' className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 me-2 mb-2'>
+                        <button id='join-btn' onClick={(e) => { handlePlay('join game key', document.getElementById('game-key-input').value) }} className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 me-2 mb-2'>
                             Join
                         </button>
                     </div>
@@ -37,7 +42,7 @@ const App = () => {
                 <div class="m-6 p-6 max-w-sm mx-auto bg-white rounded-xl shadow-lg flex items-center">
                     <div className='flex flex-col mx-auto text-center'>
                         <div class="text-xl font-medium text-black">Matchmaking</div>
-                        <button id='join-btn' className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 me-2 mb-2'>
+                        <button id='join-btn' onClick={() => { handlePlay('matchmaking') }} className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 me-2 mb-2'>
                             Play
                         </button>
                     </div>
