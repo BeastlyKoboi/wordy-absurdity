@@ -2,3 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+    .pixel-art {
+        image-rendering: pixelated;
+    }
+}
