@@ -1,14 +1,15 @@
 const socket = io();
 
+let OnCheckWord;
 let OnGameStart;
 let OnRoundStart;
 let OnOpponentPlayedWord;
 let OnRoundEnd;
 let OnGameEnd;
 
-const SetOnGameStart = (callback) => {
-    OnGameStart = callback;
-};
+const SetOnCheckWord = (callback) => { OnCheckWord = callback; };
+const SetOnGameStart = (callback) => { OnGameStart = callback; };
+
 const gameStart = (gameInfo) => {
     do {
         if (OnGameStart) {
@@ -21,6 +22,10 @@ const roundStart = (gameInfo) => { if (OnRoundStart) OnRoundStart(gameInfo); };
 const opponentPlayedWord = (gameInfo) => { if (OnOpponentPlayedWord) OnOpponentPlayedWord(gameInfo) }
 const roundEnd = (gameInfo) => { if (OnRoundEnd) OnRoundEnd(gameInfo); };
 const gameEnd = (gameInfo) => { if (OnGameEnd) OnGameEnd(gameInfo); };
+
+const triggerCheckWord = (word) => {
+    socket.emit('check word exists', word);
+};
 
 const triggerPlayedWord = () => {
 
@@ -60,15 +65,24 @@ const init = (playOption,) => {
         console.log('Start game called', OnGameStart);
     });
 
+    socket.on('check word exists', (isWord) => {
+        if (OnCheckWord) {
+            OnCheckWord(isWord);
+        }
+        console.log(isWord);
+    });
+
     console.log(socket);
 };
 
 module.exports = {
     init,
+    SetOnCheckWord,
     SetOnGameStart,
     OnRoundStart,
     OnOpponentPlayedWord,
     OnRoundEnd,
     OnGameEnd,
+    triggerCheckWord,
     triggerPlayedWord,
 }

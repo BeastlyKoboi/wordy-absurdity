@@ -1,6 +1,7 @@
 const http = require('http');
 const { Server } = require('socket.io');
 const _ = require('underscore');
+const wordExists = require('word-exists');
 
 let io;
 const tileSet = [];
@@ -50,17 +51,13 @@ const fillTileSet = () => {
     Z: 1,
   };
 
-  for (const property in tileDistributions) {
-    for (let i = 0; i < tileDistributions[property]; i++) {
-      tileSet.push(property);
+  const keys = Object.keys(tileDistributions);
+
+  for (let i = 0; i < keys.length; i++) {
+    for (let j = 0; j < tileDistributions[keys[i]]; j++) {
+      tileSet.push(keys[i]);
     }
   }
-
-  // tileDistributions.forEach((letter) => {
-  //   for (let i = 0; i < tileDistributions[letter]; i++) {
-  //     tileSet.push(letter);
-  //   }
-  // });
 };
 
 const drawPlayerLetters = (amount = 10) => {
@@ -166,6 +163,10 @@ const socketSetup = (app, sessionMiddleware) => {
       } else {
         handleRoomChange(socket, lonelyRooms.pop());
       }
+    });
+
+    socket.on('check word exists', (word) => {
+      socket.emit('check word exists', wordExists(word));
     });
   });
 

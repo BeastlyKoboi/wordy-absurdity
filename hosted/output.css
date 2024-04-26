@@ -603,6 +603,10 @@ video {
   height: 2rem;
 }
 
+.h-20 {
+  height: 5rem;
+}
+
 .w-16 {
   width: 4rem;
 }
