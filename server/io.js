@@ -72,7 +72,7 @@ const drawPlayerLetters = (amount = 10) => {
 };
 
 const scoreWord = (word) => {
-  tileValues = {
+  const tileValues = {
     A: 1,
     B: 3,
     C: 3,
@@ -255,19 +255,18 @@ const socketSetup = (app, sessionMiddleware) => {
 
         socket.to(room).emit('opponent played word');
 
-        if (!gameRoomsState[room].players[0].lastPlayedWord ||
-          !gameRoomsState[room].players[1].lastPlayedWord)
-          return;
+        if (!gameRoomsState[room].players[0].lastPlayedWord
+          || !gameRoomsState[room].players[1].lastPlayedWord) return;
 
         const sockets = await io.in(room).fetchSockets();
 
-        let player0Score = scoreWord(gameRoomsState[room].players[0].lastPlayedWord);
-        let player1Score = scoreWord(gameRoomsState[room].players[1].lastPlayedWord);
+        const player0Score = scoreWord(gameRoomsState[room].players[0].lastPlayedWord);
+        const player1Score = scoreWord(gameRoomsState[room].players[1].lastPlayedWord);
 
         gameRoomsState[room].players[0].health -= player1Score;
         gameRoomsState[room].players[1].health -= player0Score;
 
-        let player0RoundInfo = {
+        const player0RoundInfo = {
           playerHealth: gameRoomsState[room].players[0].health,
           enemyHealth: gameRoomsState[room].players[1].health,
           playerPlayed: gameRoomsState[room].players[0].lastPlayedWord,
@@ -276,7 +275,7 @@ const socketSetup = (app, sessionMiddleware) => {
           enemyPoints: player1Score,
           newLetters: drawPlayerLetters(),
         };
-        let player1RoundInfo = {
+        const player1RoundInfo = {
           playerHealth: gameRoomsState[room].players[1].health,
           enemyHealth: gameRoomsState[room].players[0].health,
           playerPlayed: gameRoomsState[room].players[1].lastPlayedWord,
@@ -286,25 +285,24 @@ const socketSetup = (app, sessionMiddleware) => {
           newLetters: drawPlayerLetters(),
         };
 
-        if (sockets[0].request.session.account.username ===
-          gameRoomsState[room].players[0].username) {
+        if (sockets[0].request.session.account.username
+          === gameRoomsState[room].players[0].username) {
           sockets[0].emit('round end', player0RoundInfo);
           sockets[1].emit('round end', player1RoundInfo);
-        }
-        else if (sockets[0].request.session.account.username ===
-          gameRoomsState[room].players[1].username) {
+        } else if (sockets[0].request.session.account.username
+          === gameRoomsState[room].players[1].username) {
           sockets[0].emit('round end', player1RoundInfo);
           sockets[1].emit('round end', player0RoundInfo);
         }
 
-        if (gameRoomsState[room].players[0].health <= 0 ||
-          gameRoomsState[room].players[1].health <= 0) {
+        if (gameRoomsState[room].players[0].health <= 0
+          || gameRoomsState[room].players[1].health <= 0) {
           console.log('Deciding winner');
           let player0Result = '';
           let player1Result = '';
 
-          if (gameRoomsState[room].players[0].health <= 0 &&
-            gameRoomsState[room].players[1].health <= 0) {
+          if (gameRoomsState[room].players[0].health <= 0
+            && gameRoomsState[room].players[1].health <= 0) {
             player0Result = 'draw';
             player1Result = 'draw';
           } else if (gameRoomsState[room].players[0].health <= 0) {
@@ -315,17 +313,16 @@ const socketSetup = (app, sessionMiddleware) => {
             player1Result = 'lose';
           }
 
-          if (sockets[0].request.session.account.username ===
-            gameRoomsState[room].players[0].username) {
+          if (sockets[0].request.session.account.username
+            === gameRoomsState[room].players[0].username) {
             sockets[0].emit('game end', {
               result: player0Result,
             });
             sockets[1].emit('game end', {
               result: player1Result,
             });
-          }
-          else if (sockets[0].request.session.account.username ===
-            gameRoomsState[room].players[1].username) {
+          } else if (sockets[0].request.session.account.username
+            === gameRoomsState[room].players[1].username) {
             sockets[0].emit('game end', {
               result: player1Result,
             });
@@ -339,9 +336,7 @@ const socketSetup = (app, sessionMiddleware) => {
         gameRoomsState[room].players[1].lastPlayedWord = null;
 
         console.log(gameRoomsState);
-
       });
-
     });
   });
 
