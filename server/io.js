@@ -6,6 +6,7 @@ const wordExists = require('word-exists');
 let io;
 const tileSet = [];
 const lonelyRooms = [];
+const gameRoomsState = {};
 
 const generateRoomKey = (keyLength = 6) => {
   const set = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -70,6 +71,45 @@ const drawPlayerLetters = (amount = 10) => {
   return drawnLetters;
 };
 
+const scoreWord = (word) => {
+  tileValues = {
+    A: 1,
+    B: 3,
+    C: 3,
+    D: 2,
+    E: 1,
+    F: 4,
+    G: 2,
+    H: 4,
+    I: 1,
+    J: 8,
+    K: 5,
+    L: 1,
+    M: 3,
+    N: 1,
+    O: 1,
+    P: 3,
+    Q: 10,
+    R: 1,
+    S: 1,
+    T: 1,
+    U: 1,
+    V: 4,
+    W: 4,
+    X: 8,
+    Y: 4,
+    Z: 10,
+  };
+
+  let score = 0;
+
+  for (let i = 0; i < word.length; i++) {
+    score += tileValues[word[i]];
+  }
+
+  return score;
+};
+
 // const handleChatMessage = (socket, msg) => {
 //     socket.rooms.forEach(room => {
 //         if (room === socket.id) return;
@@ -100,6 +140,18 @@ const socketSetup = (app, sessionMiddleware) => {
   io.on('connection', (socket) => {
     console.log('a user connected');
 
+    socket.on('disconnecting', () => {
+      socket.rooms.forEach(async (room) => {
+        if (room !== socket.id) {
+          const socketsInRoom = await io.in(room).fetchSockets();
+          if (socketsInRoom.length === 1 && gameRoomsState[room]) {
+            console.log('Deleting', room, 'from gameRoomState');
+            delete gameRoomsState[room];
+          }
+        }
+      });
+    });
+
     socket.on('disconnect', () => {
       console.log('a user disconnected');
     });
@@ -114,6 +166,22 @@ const socketSetup = (app, sessionMiddleware) => {
       // .emit('player joined', { username: socket.request.session.account.username });
       const sockets = await io.in(gameKey).fetchSockets();
       if (sockets.length === 2) {
+        gameRoomsState[gameKey] = {
+          players: [{
+            username: sockets[0].request.session.account.username,
+            health: 25,
+            lastPlayedWord: null,
+            longestWord: null,
+            highestScoredWord: null,
+          }, {
+            username: sockets[1].request.session.account.username,
+            health: 25,
+            lastPlayedWord: null,
+            longestWord: null,
+            highestScoredWord: null,
+          }],
+        };
+
         sockets[0].emit(
           'start game',
           {
@@ -166,7 +234,114 @@ const socketSetup = (app, sessionMiddleware) => {
     });
 
     socket.on('check word exists', (word) => {
-      socket.emit('check word exists', wordExists(word));
+      socket.emit('check word exists', { word, isWord: wordExists(word) });
+    });
+
+    socket.on('play word', (word) => {
+      socket.rooms.forEach(async (room) => {
+        if (room === socket.id) return;
+
+        let playerNum;
+        if (gameRoomsState[room].players[0].username
+          === socket.request.session.account.username) {
+          playerNum = 0;
+        }
+        if (gameRoomsState[room].players[1].username
+          === socket.request.session.account.username) {
+          playerNum = 1;
+        }
+
+        gameRoomsState[room].players[playerNum].lastPlayedWord = word;
+
+        socket.to(room).emit('opponent played word');
+
+        if (!gameRoomsState[room].players[0].lastPlayedWord ||
+          !gameRoomsState[room].players[1].lastPlayedWord)
+          return;
+
+        const sockets = await io.in(room).fetchSockets();
+
+        let player0Score = scoreWord(gameRoomsState[room].players[0].lastPlayedWord);
+        let player1Score = scoreWord(gameRoomsState[room].players[1].lastPlayedWord);
+
+        gameRoomsState[room].players[0].health -= player1Score;
+        gameRoomsState[room].players[1].health -= player0Score;
+
+        let player0RoundInfo = {
+          playerHealth: gameRoomsState[room].players[0].health,
+          enemyHealth: gameRoomsState[room].players[1].health,
+          playerPlayed: gameRoomsState[room].players[0].lastPlayedWord,
+          enemyPlayed: gameRoomsState[room].players[1].lastPlayedWord,
+          playerPoints: player0Score,
+          enemyPoints: player1Score,
+          newLetters: drawPlayerLetters(),
+        };
+        let player1RoundInfo = {
+          playerHealth: gameRoomsState[room].players[1].health,
+          enemyHealth: gameRoomsState[room].players[0].health,
+          playerPlayed: gameRoomsState[room].players[1].lastPlayedWord,
+          enemyPlayed: gameRoomsState[room].players[0].lastPlayedWord,
+          playerPoints: player1Score,
+          enemyPoints: player0Score,
+          newLetters: drawPlayerLetters(),
+        };
+
+        if (sockets[0].request.session.account.username ===
+          gameRoomsState[room].players[0].username) {
+          sockets[0].emit('round end', player0RoundInfo);
+          sockets[1].emit('round end', player1RoundInfo);
+        }
+        else if (sockets[0].request.session.account.username ===
+          gameRoomsState[room].players[1].username) {
+          sockets[0].emit('round end', player1RoundInfo);
+          sockets[1].emit('round end', player0RoundInfo);
+        }
+
+        if (gameRoomsState[room].players[0].health <= 0 ||
+          gameRoomsState[room].players[1].health <= 0) {
+          console.log('Deciding winner');
+          let player0Result = '';
+          let player1Result = '';
+
+          if (gameRoomsState[room].players[0].health <= 0 &&
+            gameRoomsState[room].players[1].health <= 0) {
+            player0Result = 'draw';
+            player1Result = 'draw';
+          } else if (gameRoomsState[room].players[0].health <= 0) {
+            player0Result = 'lose';
+            player1Result = 'win';
+          } else if (gameRoomsState[room].players[1].health <= 0) {
+            player0Result = 'win';
+            player1Result = 'lose';
+          }
+
+          if (sockets[0].request.session.account.username ===
+            gameRoomsState[room].players[0].username) {
+            sockets[0].emit('game end', {
+              result: player0Result,
+            });
+            sockets[1].emit('game end', {
+              result: player1Result,
+            });
+          }
+          else if (sockets[0].request.session.account.username ===
+            gameRoomsState[room].players[1].username) {
+            sockets[0].emit('game end', {
+              result: player1Result,
+            });
+            sockets[1].emit('game end', {
+              result: player0Result,
+            });
+          }
+        }
+
+        gameRoomsState[room].players[0].lastPlayedWord = null;
+        gameRoomsState[room].players[1].lastPlayedWord = null;
+
+        console.log(gameRoomsState);
+
+      });
+
     });
   });
 

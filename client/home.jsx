@@ -71,36 +71,12 @@ const App = () => {
                 </div>
             </div>
 
-            <Letter value='E' />
-            <Letter value='T' />
-            <Letter value='B' />
-            <Letter value='O' />
-
             <div id="messageDiv" class='hidden'>
                 <h3 className='text-black'><span id="message"></span></h3>
                 <h3 className='text-red'><span id="errorMessage"></span></h3>
             </div>
 
-            <div className='flex flex-col justify-around'>
-                <div className='flex flex-row m-6 justify-center items-center bg-green-700 h-20'>
-                    {spelledLetters.map((letter, index) => (
-                        <Letter value={letter} key={`spelled-${letter}-${index}`} onClick={() => moveLetterToDrawn(index)} />
-                    ))}
-                </div>
-                <div className='flex flex-row m-6 justify-center items-center'>
-                    {drawnLetters.map((letter, index) => (
-                        <Letter value={letter} key={`drawn-${letter}-${index}`} onClick={() => moveLetterToSpell(index)} />
-                    ))}
-                </div>
-                <div className='flex flex-row justify-center items-center'> 
-                    <button className='mx-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5'>
-                        Check Word
-                    </button>
-                    <button className='mx-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5'>
-                        Shuffle Letters
-                    </button>
-                </div>
-            </div>
+        
 
         </div>
     );

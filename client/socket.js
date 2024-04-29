@@ -9,6 +9,10 @@ let OnGameEnd;
 
 const SetOnCheckWord = (callback) => { OnCheckWord = callback; };
 const SetOnGameStart = (callback) => { OnGameStart = callback; };
+// const SetOnRoundStart = (callback) => { OnRoundStart = callback; };
+const SetOnOpponentPlayedWord = (callback) => { OnOpponentPlayedWord = callback; };
+const SetOnRoundEnd = (callback) => { OnRoundEnd = callback; };
+const SetOnGameEnd = (callback) => { OnGameEnd = callback; };
 
 const gameStart = (gameInfo) => {
     do {
@@ -18,7 +22,7 @@ const gameStart = (gameInfo) => {
         }
     } while (!OnGameStart);
 };
-const roundStart = (gameInfo) => { if (OnRoundStart) OnRoundStart(gameInfo); };
+// const roundStart = (gameInfo) => { if (OnRoundStart) OnRoundStart(gameInfo); };
 const opponentPlayedWord = (gameInfo) => { if (OnOpponentPlayedWord) OnOpponentPlayedWord(gameInfo) }
 const roundEnd = (gameInfo) => { if (OnRoundEnd) OnRoundEnd(gameInfo); };
 const gameEnd = (gameInfo) => { if (OnGameEnd) OnGameEnd(gameInfo); };
@@ -27,8 +31,8 @@ const triggerCheckWord = (word) => {
     socket.emit('check word exists', word);
 };
 
-const triggerPlayedWord = () => {
-
+const triggerPlayedWord = (word) => {
+    socket.emit('play word', word);
 };
 
 const displayMessage = (msg, id) => {
@@ -65,11 +69,30 @@ const init = (playOption,) => {
         console.log('Start game called', OnGameStart);
     });
 
-    socket.on('check word exists', (isWord) => {
+    socket.on('check word exists', (wordInfo) => {
         if (OnCheckWord) {
-            OnCheckWord(isWord);
+            OnCheckWord(wordInfo);
         }
-        console.log(isWord);
+        console.log(wordInfo);
+    });
+
+    socket.on('opponent played word', (moveInfo) => {
+        if (OnOpponentPlayedWord) {
+            OnOpponentPlayedWord(moveInfo);
+        }
+    });
+
+    socket.on('round end', (roundInfo) => {
+        if (OnRoundEnd) {
+            OnRoundEnd(roundInfo);
+        }
+    });
+
+    socket.on('game end', (endInfo) => {
+        console.log('on game end received');
+        if (OnGameEnd) {
+            OnGameEnd(endInfo);
+        }
     });
 
     console.log(socket);
@@ -79,10 +102,10 @@ module.exports = {
     init,
     SetOnCheckWord,
     SetOnGameStart,
-    OnRoundStart,
-    OnOpponentPlayedWord,
-    OnRoundEnd,
-    OnGameEnd,
+    // SetOnRoundStart,
+    SetOnOpponentPlayedWord,
+    SetOnRoundEnd,
+    SetOnGameEnd,
     triggerCheckWord,
     triggerPlayedWord,
 }
