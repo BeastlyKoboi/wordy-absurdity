@@ -28,6 +28,7 @@ const router = (app) => {
   app.get('/admin', mid.requiresLogin, mid.requiresAdmin, controllers.Account.adminPage);
   app.post('/toggleAdmin', mid.requiresSecure, mid.requiresLogin, controllers.Account.toggleAdmin);
   app.get('/getLeaderboard', mid.requiresSecure, mid.requiresLogin, mid.requiresAdmin, controllers.Account.getLeaderboard);
+  app.post('/incrementWins', mid.requiresSecure, mid.requiresLogin, controllers.Account.incrementWins);
 
   app.get('/game', mid.requiresLogin, controllers.Home.gamePage);
 

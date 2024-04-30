@@ -77,11 +77,11 @@ const LoginWindow = (props) => {
                 >
                     <div>
                         <label htmlFor="username">Username: </label>
-                        <input id='user' type="text" name='username' placeholder='username' className='w-20' />
+                        <input id='user' type="text" name='username' placeholder='username' className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5' />
                     </div>
                     <div>
                         <label htmlFor="pass">Password: </label>
-                        <input id='pass' type="password" name='pass' placeholder='password' className='w-20' />
+                        <input id='pass' type="password" name='pass' placeholder='password' className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5' />
                     </div>
                     <input className='formSubmit text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2'
                         type="submit" value='Sign in' />
@@ -124,15 +124,15 @@ const SignupWindow = (props) => {
                 >
                     <div>
                         <label htmlFor="username">Username: </label>
-                        <input id='user' type="text" name='username' placeholder='username' className='w-30'/>
+                        <input id='user' type="text" name='username' placeholder='username' className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'/>
                     </div>
                     <div>
                         <label htmlFor="pass">Password: </label>
-                        <input id='pass' type="password" name='pass' placeholder='password' className='w-30'/>
+                        <input id='pass' type="password" name='pass' placeholder='password' className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'/>
                     </div>
                     <div>
                         <label htmlFor="pass">Password: </label>
-                        <input id='pass2' type="password" name='pass2' placeholder='retype password' className='w-30'/>
+                        <input id='pass2' type="password" name='pass2' placeholder='retype password' className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'/>
                     </div>
                     <input className='formSubmit text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2'
                         type="submit" value='Sign up' />

@@ -185,7 +185,10 @@ const socketSetup = (app, sessionMiddleware) => {
         sockets[0].emit(
           'start game',
           {
+            playerAvatar: sockets[0].request.session.account.avatars[0],
             playerUsername: sockets[0].request.session.account.username,
+            playerTileColor: sockets[0].request.session.account.tileColor[0],
+            enemyAvatar: sockets[1].request.session.account.avatars[0],
             enemyUsername: sockets[1].request.session.account.username,
             drawnLetters: drawPlayerLetters(),
           },
@@ -193,7 +196,10 @@ const socketSetup = (app, sessionMiddleware) => {
         sockets[1].emit(
           'start game',
           {
+            playerAvatar: sockets[1].request.session.account.avatars[0],
             playerUsername: sockets[1].request.session.account.username,
+            playerTileColor: sockets[1].request.session.account.tileColor[0],
+            enemyAvatar: sockets[0].request.session.account.avatars[0],
             enemyUsername: sockets[0].request.session.account.username,
             drawnLetters: drawPlayerLetters(),
           },
@@ -218,7 +224,7 @@ const socketSetup = (app, sessionMiddleware) => {
       console.log('game key emitted');
     });
 
-    socket.on('join matchmade game', () => {
+    socket.on('join matchmade game', async () => {
       let gameKey;
 
       if (lonelyRooms.length === 0) {
@@ -229,12 +235,55 @@ const socketSetup = (app, sessionMiddleware) => {
         handleRoomChange(socket, gameKey);
         lonelyRooms.push(gameKey);
       } else {
-        handleRoomChange(socket, lonelyRooms.pop());
+        gameKey = lonelyRooms.pop();
+        handleRoomChange(socket, gameKey);
+
+        const sockets = await io.in(gameKey).fetchSockets();
+        if (sockets.length === 2) {
+          gameRoomsState[gameKey] = {
+            players: [{
+              username: sockets[0].request.session.account.username,
+              health: 25,
+              lastPlayedWord: null,
+              longestWord: null,
+              highestScoredWord: null,
+            }, {
+              username: sockets[1].request.session.account.username,
+              health: 25,
+              lastPlayedWord: null,
+              longestWord: null,
+              highestScoredWord: null,
+            }],
+          };
+
+          sockets[0].emit(
+            'start game',
+            {
+              playerAvatar: sockets[0].request.session.account.avatars[0],
+              playerUsername: sockets[0].request.session.account.username,
+              playerTileColor: sockets[0].request.session.account.tileColor[0],
+              enemyAvatar: sockets[1].request.session.account.avatars[0],
+              enemyUsername: sockets[1].request.session.account.username,
+              drawnLetters: drawPlayerLetters(),
+            },
+          );
+          sockets[1].emit(
+            'start game',
+            {
+              playerAvatar: sockets[1].request.session.account.avatars[0],
+              playerUsername: sockets[1].request.session.account.username,
+              playerTileColor: sockets[1].request.session.account.tileColor[0],
+              enemyAvatar: sockets[0].request.session.account.avatars[0],
+              enemyUsername: sockets[0].request.session.account.username,
+              drawnLetters: drawPlayerLetters(),
+            },
+          );
+        }
       }
     });
 
     socket.on('check word exists', (word) => {
-      socket.emit('check word exists', { word, isWord: wordExists(word) });
+      socket.emit('check word exists', { word, isWord: wordExists(word), points: scoreWord(word) });
     });
 
     socket.on('play word', (word) => {

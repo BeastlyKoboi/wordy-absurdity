@@ -70,12 +70,7 @@ const App = () => {
                     </div>
                 </div>
             </div>
-
-            <Letter value='E' />
-            <Letter value='T' />
-            <Letter value='B' />
-            <Letter value='O' />
-
+            
             <div id="messageDiv" class='hidden'>
                 <h3 className='text-black'><span id="message"></span></h3>
                 <h3 className='text-red'><span id="errorMessage"></span></h3>

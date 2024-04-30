@@ -1,3 +1,4 @@
+const helper = require('./helper.js');
 const React = require('react');
 const { useState, useEffect } = React;
 const { createRoot } = require('react-dom/client');
@@ -23,7 +24,7 @@ const Gameplay = ({ socketCon, gameStartInfo }) => {
         }
 
         if (wordInfo.isWord)
-            setGameMessage(`${wordInfo.word} is a valid word!`);
+            setGameMessage(`${wordInfo.word} is worth ${wordInfo.points} points!`);
         else
             setGameMessage(`${wordInfo.word} is not a valid word!`);
     })
@@ -46,6 +47,9 @@ const Gameplay = ({ socketCon, gameStartInfo }) => {
         for ${roundInfo.enemyPoints} points of damage.`);
     });
     socket.SetOnGameEnd((endInfo) => {
+        if (endInfo.result === 'win') {
+            helper.sendPost('/incrementWins');
+        }
         setGameResult(endInfo.result);
     });
 
@@ -91,7 +95,7 @@ const Gameplay = ({ socketCon, gameStartInfo }) => {
         <>
             <div className='flex flex-row mx-auto justify-center items-center'>
                 <div className='flex flex-col items-center m-6 p-6 mx-auto bg-white rounded-xl shadow-lg'>
-                    <img src="/assets/img/favicon2.png" alt="avatar" className='pixel-art w-16 h-16' />
+                    <img src={`/assets/img/avatars/${gameStartInfo.enemyAvatar}`} alt="avatar" className='pixel-art w-16 h-16' />
                     <div className='p-2 border-black text-xl font-medium text-black'>{gameStartInfo.enemyUsername}</div>
                     <div className='p-2 flex flex-row mx-auto justify-center'>
                         <div className='text-xl font-medium text-black'>{enemyHealth}</div>
@@ -112,7 +116,7 @@ const Gameplay = ({ socketCon, gameStartInfo }) => {
                 </div>
 
                 <div className='flex flex-col items-center m-6 p-6 mx-auto bg-white rounded-xl shadow-lg'>
-                    <img src="/assets/img/favicon2.png" alt="avatar" className='pixel-art w-16 h-16' />
+                    <img src={`/assets/img/avatars/${gameStartInfo.playerAvatar}`} alt="avatar" className='pixel-art w-16 h-16' />
                     <div className='p-2 border-black text-xl font-medium text-black'>{gameStartInfo.playerUsername}</div>
                     <div className='p-2 flex flex-row mx-auto justify-center'>
                         <div className='text-xl font-medium text-black'>{playerHealth}</div>
@@ -133,12 +137,12 @@ const Gameplay = ({ socketCon, gameStartInfo }) => {
             <div className='flex flex-col justify-around'>
                 <div className='flex flex-row m-6 justify-center items-center bg-green-700 h-20'>
                     {spelledLetters.map((letter, index) => (
-                        <Letter value={letter} key={`spelled-${letter}-${index}`} onClick={() => moveLetterToDrawn(index)} />
+                        <Letter value={letter} key={`spelled-${letter}-${index}`} onClick={() => moveLetterToDrawn(index)} bgColor={gameStartInfo.playerTileColor} />
                     ))}
                 </div>
                 <div className='flex flex-row m-6 justify-center items-center'>
                     {drawnLetters.map((letter, index) => (
-                        <Letter value={letter} key={`drawn-${letter}-${index}`} onClick={() => moveLetterToSpell(index)} />
+                        <Letter value={letter} key={`drawn-${letter}-${index}`} onClick={() => moveLetterToSpell(index)} bgColor={gameStartInfo.playerTileColor} />
                     ))}
                 </div>
                 <div className='flex flex-row justify-center items-center'>

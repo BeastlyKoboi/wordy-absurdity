@@ -264,7 +264,7 @@ const getLeaderboard = async (req, res) => {
   try {
     const topPlayers = await Account.find().sort({ gameWins: -1 }).limit(10);
     const topPlayersJSON = [];
-    topPlayers.forEach(doc => {
+    topPlayers.forEach((doc) => {
       topPlayersJSON.push(Account.toAPI(doc));
     });
     return res.json(topPlayersJSON);
@@ -272,7 +272,23 @@ const getLeaderboard = async (req, res) => {
     console.log(err);
     return res.status(500).json({ error: 'An error occurred!' });
   }
+};
 
+const incrementWins = async (req, res) => {
+  try {
+    const account = await Account.findById(req.session.account._id).exec();
+
+    account.set({ gameWins: req.session.account.gameWins + 1 });
+    await account.save();
+    req.session.account = Account.toAPI(account);
+
+    console.log(req.session.account);
+
+    return res.json({});
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'An error occurred!' });
+  }
 };
 
 module.exports = {
@@ -293,4 +309,5 @@ module.exports = {
   setTileStyle,
   toggleAdmin,
   getLeaderboard,
+  incrementWins,
 };

@@ -23,9 +23,9 @@ const gameStart = (gameInfo) => {
     } while (!OnGameStart);
 };
 // const roundStart = (gameInfo) => { if (OnRoundStart) OnRoundStart(gameInfo); };
-const opponentPlayedWord = (gameInfo) => { if (OnOpponentPlayedWord) OnOpponentPlayedWord(gameInfo) }
-const roundEnd = (gameInfo) => { if (OnRoundEnd) OnRoundEnd(gameInfo); };
-const gameEnd = (gameInfo) => { if (OnGameEnd) OnGameEnd(gameInfo); };
+// const opponentPlayedWord = (gameInfo) => { if (OnOpponentPlayedWord) OnOpponentPlayedWord(gameInfo) }
+// const roundEnd = (gameInfo) => { if (OnRoundEnd) OnRoundEnd(gameInfo); };
+// const gameEnd = (gameInfo) => { if (OnGameEnd) OnGameEnd(gameInfo); };
 
 const triggerCheckWord = (word) => {
     socket.emit('check word exists', word);
