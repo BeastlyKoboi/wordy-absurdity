@@ -32,7 +32,24 @@ const sendPost = async (url, data, handler) => {
 
     if (handler) {
         handler(result);
-    }
+    } else
+        return result;
+};
+
+const sendGet = async (url, handler) => {
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+        },
+    });
+
+    const result = await response.json();
+
+    if (handler)
+        handler(result);
+    else
+        return result;
 };
 
 const hideError = () => {
@@ -42,5 +59,6 @@ const hideError = () => {
 module.exports = {
     handleError,
     sendPost,
+    sendGet,
     hideError,
 };

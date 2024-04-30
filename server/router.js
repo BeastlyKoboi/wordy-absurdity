@@ -18,8 +18,16 @@ const router = (app) => {
   app.post('/changePassword', mid.requiresLogin, controllers.Account.changePassword);
 
   app.get('/accountSettings', mid.requiresLogin, controllers.Account.accountSettingsPage);
+  app.get('/getAvatars', mid.requiresSecure, mid.requiresLogin, controllers.Account.getAvatars);
+  app.post('/addAvatar', mid.requiresSecure, mid.requiresLogin, controllers.Account.addAvatar);
+  app.post('/setAvatar', mid.requiresSecure, mid.requiresLogin, controllers.Account.setAvatar);
+  app.get('/getTileStyles', mid.requiresSecure, mid.requiresLogin, controllers.Account.getTileStyles);
+  app.post('/addTileStyle', mid.requiresSecure, mid.requiresLogin, controllers.Account.addTileStyle);
+  app.post('/setTileStyle', mid.requiresSecure, mid.requiresLogin, controllers.Account.setTileStyle);
 
-  app.get('/admin', mid.requiresLogin, controllers.Account.adminPage);
+  app.get('/admin', mid.requiresLogin, mid.requiresAdmin, controllers.Account.adminPage);
+  app.post('/toggleAdmin', mid.requiresSecure, mid.requiresLogin, controllers.Account.toggleAdmin);
+  app.get('/getLeaderboard', mid.requiresSecure, mid.requiresLogin, mid.requiresAdmin, controllers.Account.getLeaderboard);
 
   app.get('/game', mid.requiresLogin, controllers.Home.gamePage);
 

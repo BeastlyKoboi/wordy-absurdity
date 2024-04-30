@@ -24,8 +24,16 @@ const bypassSecure = (req, res, next) => {
   next();
 };
 
+const requiresAdmin = (req, res, next) => {
+  if (!req.session.account.admin) {
+    return res.redirect('/accountSettings');
+  }
+  return next();
+};
+
 module.exports.requiresLogin = requiresLogin;
 module.exports.requiresLogout = requiresLogout;
+module.exports.requiresAdmin = requiresAdmin;
 
 if (process.env.NODE_ENV === 'production') {
   module.exports.requiresSecure = requiresSecure;

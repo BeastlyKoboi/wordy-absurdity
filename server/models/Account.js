@@ -37,12 +37,42 @@ const AccountSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  admin: {
+    type: Boolean,
+    default: false,
+  },
+  avatars: {
+    type: [String],
+    default: ['avatar1.png'],
+  },
+  tileColor: {
+    type: [String],
+    default: ['white'],
+  },
+  letterColor: {
+    type: [String],
+    default: ['black'],
+  },
+  gameWins: {
+    type: Number,
+    default: 0,
+  },
+  highestScoredWord: {
+    type: String,
+    default: '',
+  },
 });
 
 // Converts a doc to something we can store in redis later on.
 AccountSchema.statics.toAPI = (doc) => ({
   username: doc.username,
   _id: doc._id,
+  admin: doc.admin,
+  avatars: doc.avatars,
+  tileColor: doc.tileColor,
+  letterColor: doc.letterColor,
+  gameWins: doc.gameWins,
+  highestScoredWord: doc.highestScoredWord,
 });
 
 // Helper function to hash a password
