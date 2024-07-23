@@ -383,8 +383,6 @@ const socketSetup = (app, sessionMiddleware) => {
 
         gameRoomsState[room].players[0].lastPlayedWord = null;
         gameRoomsState[room].players[1].lastPlayedWord = null;
-
-        console.log(gameRoomsState);
       });
     });
   });

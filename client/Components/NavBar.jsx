@@ -27,6 +27,7 @@ const NavBar = ({ hasLogin = false, hasSignup = false, hasLogout = false, hasAcc
                 {/* <div class="navlink"><a href="/changePassword" className='text-gray-100'>Change Password</a></div> */}
 
             </div>
+            
             <div className='p-4'>
                 {hasAccountSettings && <div class="navlink"><a href="/accountSettings" className='text-blue-100'>Account Settings</a></div>}
             </div>

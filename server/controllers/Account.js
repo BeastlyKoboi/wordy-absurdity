@@ -139,8 +139,6 @@ const addAvatar = async (req, res) => {
 const setAvatar = async (req, res) => {
   const { avatarName } = req.body;
 
-  console.log(avatarName);
-
   if (!avatarName) {
     return res.status(400).json({ error: 'All fields are required' });
   }

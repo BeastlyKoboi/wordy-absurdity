@@ -1,0 +1,124 @@
+● What is the purpose of your application? What does it do?
+The purpose of this web application is to provide entertainment value by letting people play what amounts to scrabble against each other. It lets you try your hand at spelling what you can and customizing your visual layout for the price of free. I would suggest using two different browsers at the same time to test the web app since you can play the game against yourself.
+
+
+● How are you using React?
+	○ What components do you have?
+I have used react extensively in this project, but have not sectioned things off into components as much as I should. I am using it on all pages and even during the socket game. The components I have are...
+Higher Level ones
+- login.jsx
+- home.jsx
+- changePassword.jsx
+- game.jsx
+- admin.jsx
+- accountSettings.jsx
+
+Lower Level Ones
+- NavBar.jsx
+- Letter.jsx
+- Gameplay.jsx
+
+
+● What data are you storing in MongoDB?
+My account model now stores whether the user is an admin, their unlocked avatars, their unlocked tile colors, and their total wins. Letter color and highest-scored word also exist but are not being updated. The avatars and tile colors are fully cosmetic and the admin bool regulates entry into the admin page. 
+
+
+● What went right in the development of this project?
+The bones of this project were good. The plan to use Socketio and Express together was helpful as there is a lot of documentation out there for using both together. The word game idea was complicated, but still on the simpler side of things to do with Socketio. I faced no errors that delayed me for more than a day or two, which is a godsend. 
+
+
+● What went wrong in the development of this project?
+As usual for me, planning was a weakness. I had to cram to get the functionality I wanted in this project, which made it suffer both functionally and creatively. I spent way too much time figuring out how to make the Socketio game work and other areas needed more time. Nothing too crazy went wrong, just a general lack of motivation on my part due to burnout. 
+
+
+● What did you learn while developing this project?
+I learned more about event-based programming and better workflows when creating web apps. This was an interesting challenge of attempting to put several big components together to work cohesively, which certainly deepened my knowledge of how these things work. I learned more about non-traditional database formats and used one firsthand. I was introduced to Tailwind, which is a very different way of doing styling than I ever have. 
+
+
+● If you were to continue, what would you do to improve your application?
+There are several stretch goals I wanted to do, but first I would want to rectify some mistakes. I have not been using Tailwind to its full effectiveness, as I have been doing too much copy and paste for the same styles on different pages and components. I should have made my own classes in input.css that centralized all that info. The word game needs more testing and bug fixing as I am not sure what would happen if someone really tried to break the game. Also the surrender button does not work, so I need to implement that. 
+After that I do want to work more on the game itself. At the moment it is too easy to produce a draw. My original idea had mechanics like rerolling letters occasionally and choosing letters to keep between rounds, also maybe some archetypes with interesting single-use abilities. These ideas became unfeasible for the amount of time I gave myself and I hope to have fun with them in the future. Also maybe I could add a drag-and-drop version of the UI to accommodate or help implement some of these changes. Like dragging tiles to a mini trash can to reroll them. Also I do want a snappy title screen, which I have not made. The styling could still use a lot of work and the tile customization is more limited than I wanted it to be, so those would also be things to try to change.
+
+
+● If you went above and beyond, how did you do so?
+I used Tailwind for styling, Socketio for the gameplay, and an npm package for word checking. Tailwind was a large integration that took up a great deal of my effort. I also made two ways to have games occur, by hosting or by matchmaking. Beyond that, not much is too outside of what was expected.
+
+
+● If you used any borrowed code or code fragments, where did you get them from?
+What do the code fragments do? Where are they in your code?
+I do not believe I have any code fragments from anything. I cut everything domo related already and only really used documentation to move along. 
+
+
+ENDPOINTS
+
+URL: /changePassword
+Supported Methods: GET, POST
+Middleware: Requires Login, 
+Query Params: username, oldPass, newPass, newPass2
+Description: Changes the saved password from the account. 
+Return Type(s): JSON
+
+URL: /getAvatars
+Supported Methods: GET
+Middleware: Requires Secure, Requires Login
+Query Params: 
+Description: Get a list of the names of the account's unlocked avatars and all avatars. 
+Return Type(s): JSON
+
+URL: /addAvatar
+Supported Methods: POST
+Middleware: Requires Secure, Requires Login
+Query Params: avatarName
+Description: Adds avatar name to white list of the user's account.
+Return Type(s): JSON
+
+URL: /setAvatar
+Supported Methods: POST
+Middleware: Requires Secure, Requires Login
+Query Params: avatarName
+Description: Sets the currently used avatar for the account. 
+Return Type(s): JSON
+
+URL: /getTileStyles
+Supported Methods: GET
+Middleware: Requires Secure, Requires Login
+Query Params: 
+Description: Retrieves lists of both unlocked and all color styles possible. 
+Return Type(s): JSON
+
+URL: /addTileStyle
+Supported Methods: POST
+Middleware: Requires Secure, Requires Login
+Query Params: tileStyleName
+Description: Adds color to player's white list.
+Return Type(s): JSON
+
+URL: /setTileStyle
+Supported Methods: POST
+Middleware: Requires Secure, Requires Login
+Query Params: tileStyleName
+Description: Sets the color of the tile set for the account
+Return Type(s): JSON
+
+URL: /toggleAdmin
+Supported Methods: POST
+Middleware: Requires Secure, Requires Login
+Query Params: 
+Description: Toggles the user's admin privileges on and off.
+Return Type(s): JSON
+
+URL: /getLeaderboard
+Supported Methods: GET
+Middleware: Requires Secure, Requires Login
+Query Params: 
+Description: Returns the top ten players in terms of game wins. 
+Return Type(s): JSON
+
+URL: /incrementWins
+Supported Methods: POST
+Middleware: Requires Secure, Requires Login
+Query Params: 
+Description: Increases the account's game wins by 1.
+Return Type(s): JSON
+
+
