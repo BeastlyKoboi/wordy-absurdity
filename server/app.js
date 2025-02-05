@@ -30,6 +30,10 @@ const redisClient = redis.createClient({
 
 redisClient.on('error', (err) => console.log('Redis Client Error', err));
 
+redisClient.on('connect', () => {
+  console.log('Redis successfully connected');
+});
+
 redisClient.connect().then(() => {
   const app = express();
 
@@ -65,4 +69,6 @@ redisClient.connect().then(() => {
     }
     console.log(`Listening on port ${port}`);
   });
+}).catch((err) => {
+  console.error('Failed to connect to Redis:', err);
 });
