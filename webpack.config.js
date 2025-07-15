@@ -8,6 +8,7 @@ module.exports = {
         app: './client/home.jsx',
         login: './client/login.jsx',
         changePassword: './client/changePassword.jsx',
+        notFound: './client/notFound.jsx',
     },
     module: {
         rules: [
