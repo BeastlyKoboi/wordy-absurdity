@@ -40,7 +40,7 @@ const App = () => {
         <div className='bg-cyan-300'>
             <NavBar hasLogout={true} hasAccountSettings={true} />
 
-            <div className='flex flex-row'>
+            <div className='flex flex-col md:flex-row'>
 
                 <div class="m-6 p-6 max-w-sm mx-auto bg-white rounded-xl shadow-lg flex items-center">
                     <div className='flex flex-col mx-auto text-center'>

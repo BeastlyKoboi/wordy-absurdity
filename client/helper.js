@@ -5,6 +5,10 @@
 const handleError = (message) => {
     document.getElementById('errorMessage').textContent = message;
     document.getElementById('messageDiv').classList.remove('hidden');
+    document.getElementById('messageDiv').classList.add('flex');
+    document.getElementById('messageDiv').classList.add('items-center');
+    document.getElementById('messageDiv').classList.add('justify-center');
+
 };
 
 /* Sends post requests to the server using fetch. Will look for various
